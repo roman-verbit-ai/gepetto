@@ -8,7 +8,7 @@ class GPTClient {
     this.api_model = "text-davinci-003"
     this.api_headers = {
       "Content-Type": "application/json",
-      Authorization: "Bearer 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",
+      Authorization: "Bearer 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",
     };
 
     // gpt query parameters
@@ -170,7 +170,7 @@ function init() {
             display: inline-block;
             width: 30px;
             height: 30px;
-            background-color: #146356;
+            background-color: #9312e2;
             border-radius: 50%;
             box-shadow: 10px 0px 5px -1px rgba(0,0,0,0.75);
         }
@@ -235,7 +235,6 @@ function init() {
 
         /* The Modal (background) */
         #gptModal {
-          display: none; /* Hidden by default */
           position: fixed; /* Stay in place */
           z-index: 1; /* Sit on top */
           left: 0;
@@ -244,7 +243,8 @@ function init() {
           height: 100%; /* Full height */
           overflow: auto; /* Enable scroll if needed */
           background-color: rgb(0,0,0); /* Fallback color */
-          background-color: rgba(91, 112, 131, 0.4)
+          background-color: rgba(91, 112, 131, 0.4);
+
         }
         
         /* Modal Content/Box */
@@ -259,6 +259,7 @@ function init() {
 
           background: #000000;
           border-radius: 20px;
+          min-height:400px;
         }
         
         #gptModal .loadingText {
@@ -313,16 +314,16 @@ function init() {
           transition: max-height 0.2s ease-out;
         }
 
-        #gptModal .panel:hover {
-          background: rgba(255, 255, 255, 0.15);
-        }
-
         #gptModal .panel .question {
           color: #FFFFFF;
           background: #000000;
           border-radius: 20px;
           padding: 15px;
           cursor: pointer;
+        }
+
+        #gptModal .panel .question:hover {
+          background: rgba(255, 255, 255, 0.15);
         }
       `
     ;
@@ -365,7 +366,6 @@ function init() {
 
     modal.id = 'gptModal';
     modal.className = 'modal';
-    modal.style = ' display: block; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); '
     modal.innerHTML = `
 		  <div class="modal-content">
         <span class="close">&times;</span>
@@ -384,7 +384,7 @@ function init() {
 		`;
 
     document.querySelector('body').append(modal);
-    document.querySelector('#gptModal .close').addEventListener("click", () => doApprove('xxxxxx'));
+    document.querySelector('#gptModal .close').addEventListener("click", () => { document.getElementById('gptModal').remove(); });
     critisize(tweet);
     console.log(criticizeButton);
   });
