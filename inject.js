@@ -314,12 +314,11 @@ function init() {
           transition: max-height 0.2s ease-out;
         }
 
-        #gptModal .panel .question {
-          color: #FFFFFF;
-          background: #000000;
-          border-radius: 20px;
-          padding: 15px;
-          cursor: pointer;
+        #gptModal .question {
+            border-radius: 20px;
+            padding: 15px;
+            cursor: pointer;
+            color: white;
         }
 
         #gptModal .panel .question:hover {
@@ -444,7 +443,4 @@ function createBtn() {
   return button;
 }
 
-setTimeout(function () { init(); alert("loaded2");}, 5000);
-
-document.addEventListener('DOMContentLoaded', function() { alert('attempt #3'); });
-window.onload=function(){ alert("test"); } 
+setTimeout(function () { init(); }, 5000);
