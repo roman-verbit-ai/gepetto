@@ -317,7 +317,12 @@ function init() {
           background: rgba(255, 255, 255, 0.15);
         }
 
-        #gptModal .panel .question {
+        #gptModal .question {
+            border-radius: 20px;
+            padding: 15px;
+        }
+
+        #gptModal .panel {
           color: #FFFFFF;
           background: #000000;
           border-radius: 20px;
