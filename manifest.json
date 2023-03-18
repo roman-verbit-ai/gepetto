@@ -27,10 +27,8 @@
                 "*://mobile.twitter.com/*",
                 "*://twitter.com/*"
             ],
-            "js": [
-                "inject.js"
-            ],
-			"run_at": "document_end"
+            "js": ["inject.js"],
+			"run_at": "document_end"   
         }
     ],
     
@@ -41,6 +39,6 @@
         "96": "/icons/icon96.png"
     },
     "content_security_policy": "script-src-elem 'self' chrome-extension://*/inject.js https://api.openai.com/*  ;",
-	"host_permissions": ["https://api.openai.com/*"],
+	"web_accessible_resources": ["injected.js"],
     "version": "0.0.2"
 }
