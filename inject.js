@@ -244,7 +244,7 @@ function init() {
           height: 100%; /* Full height */
           overflow: auto; /* Enable scroll if needed */
           background-color: rgb(0,0,0); /* Fallback color */
-          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+          background-color: rgba(91, 112, 131, 0.4)
         }
         
         /* Modal Content/Box */
@@ -306,16 +306,15 @@ function init() {
           margin-bottom: 2px;
         }
         
-        #gptModal .active, .accordion:hover {
-          background-color: #ccc;
-        }
-        
         #gptModal .panel {
           padding: 0 18px;
-          background-color: white;
           max-height: 0;
           overflow: hidden;
           transition: max-height 0.2s ease-out;
+        }
+
+        #gptModal .panel:hover {
+          background: rgba(255, 255, 255, 0.15);
         }
 
         #gptModal .panel .question {
