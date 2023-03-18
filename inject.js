@@ -304,7 +304,7 @@ function init() {
           outline: none;
           transition: 0.4s;
           margin-top: 10px;
-          margin-bottom: 2px;
+          margin-bottom: 10px;
         }
         
         #gptModal .panel {
