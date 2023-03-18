@@ -1,0 +1,46 @@
+{
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "name": "Gepeto",
+    "description": "TODO",
+    "browser_action": {
+        "default_icon": {
+            "16": "/icons/icon16.png",
+            
+            "48": "/icons/icon48.png",
+            "96": "/icons/icon96.png"
+        },
+        "default_title": "Gepeto"
+    },
+    "permissions": [
+        "storage",
+        "unlimitedStorage",
+        "webRequest",
+        "https://api.twitter.com/",
+        "*://*.twitter.com/*",
+		"https://api.openai.com/*"
+    ],
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+            "matches": [
+                "*://www.twitter.com/*",
+                "*://mobile.twitter.com/*",
+                "*://twitter.com/*"
+            ],
+            "js": [
+                "inject.js"
+            ],
+			"run_at": "document_end"
+        }
+    ],
+    
+    "icons": {
+        "16": "/icons/icon16.png",
+        
+        "48": "/icons/icon48.png",
+        "96": "/icons/icon96.png"
+    },
+    "content_security_policy": "script-src-elem 'self' chrome-extension://*/inject.js https://api.openai.com/*  ;",
+	"host_permissions": ["https://api.openai.com/*"],
+    "version": "0.0.2"
+}
