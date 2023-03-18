@@ -8,7 +8,7 @@ class GPTClient {
     this.api_model = "text-davinci-003"
     this.api_headers = {
       "Content-Type": "application/json",
-      Authorization: "Bearer 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",
+      Authorization: "Bearer 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",
     };
 
     // gpt query parameters
