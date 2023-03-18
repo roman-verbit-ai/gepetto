@@ -8,7 +8,7 @@ class GPTClient {
     this.api_model = "text-davinci-003"
     this.api_headers = {
       "Content-Type": "application/json",
-      Authorization: "Bearer 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",
+      Authorization: "Bearer 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",
     };
 
     // gpt query parameters
@@ -313,7 +313,7 @@ function init() {
           transition: max-height 0.2s ease-out;
         }
 
-        #gptModal .panel:hover {
+        #gptModal .question:hover {
           background: rgba(255, 255, 255, 0.15);
         }
 
