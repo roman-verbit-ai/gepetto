@@ -1,23 +1,14 @@
-chrome.action.onClicked.addListener((tab) => {
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    files: ["inject.js"]
-  });
-});
-
-chrome.webNavigation.onHistoryStateUpdated.addListener( function () {
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ["inject.js"]
-    
-  })
-});
-
-chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+chrome.action.onClicked.addListener((tab) => execScript(tab.id));
+chrome.webNavigation.onHistoryStateUpdated.addListener((tab) => execScript(tab.id));
+chrome.tabs.onUpdated.addListener( function (_, changeInfo, tab) {
   if (changeInfo.status == 'complete' && tab.active) {
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ["inject.js"]
-    });
+    execScript(tab.id);
   }
 });
+
+function execScript(tabId) {
+  chrome.scripting.executeScript({
+    target: { tabId },
+    files: ["inject.js"]
+  });
+}
