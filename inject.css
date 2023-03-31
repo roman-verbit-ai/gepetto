@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic);
 @keyframes pulse {
     0% {
       transform: scale(0.95);
@@ -15,9 +16,10 @@
     }
   }
 #gepetto-panel {
-    --color-bg: #dcba93;
-    --border-radius: .5rem;
+    --color-bg: #f5f5f5;
+    --border-radius: 2px;
     --color-primary: #0f0f0f;
+    --color-inverted: #f5f5f5;
 }
 
 .paper-clip {
@@ -137,19 +139,6 @@
     }
 }
 
-    /* The Modal (background) */
-    #gptModal {
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
-      background-color: rgba(91, 112, 131, 0.4);
-
-    }
 
     #gepetto-panel {
         position: fixed;
@@ -163,37 +152,149 @@
         transition: all, .2s, ease-in;
         border-top-left-radius: var(--border-radius);
         border-bottom-left-radius: var(--border-radius);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        border-inline-end: 1px solid var(--color-primary);
+    }
+    #gepetto-panel ul {
+        margin-inline: 1rem;
+        border-block-end: 1px solid var(--color-primary);
+        visibility: visible;
+        padding-inline-start: 0;
+    }
+
+    #gepetto-panel ul > li:first-of-type {
+        list-style: none;
+        background-color: var(--color-primary);
+        color: var(--color-inverted);
+        padding: 0.5rem 1rem;
+        margin-bottom: 0.5rem;
+        margin-inline-start: 0;
+    }
+
+    #gepetto-panel #ref_text > p {
+        list-style: none;
+        background-color: var(--color-primary);
+        color: var(--color-inverted);
+        padding: 0.5rem 1rem;
+        margin-bottom: 0.5rem;
+        margin-inline-start: 1rem;
+    }
+    #gepetto-panel.loading ul,
+    #gepetto-panel.loading #ref_text {
+        visibility: hidden;
+    }
+
+    #gepetto-panel .lds-facebook {
+        display: none;
+    }
+    #gepetto-panel.loading .lds-facebook {
+        display: inline-block;
+        order:2
     }
 
     #gepetto-panel.Active {
         opacity: 1;
-        z-index: 1; /* TODO ! */
+        z-index: 1000001; /* TODO ! */
     }
 
     #gepetto-panel #ref_text {
-        /* background-color: #739; */
-        padding: 10px;
-        border: 1px solid;
-        border-radius: var(--border-radius);
+        order:2;
+        margin-inline: 1rem;
+        border-block-end: 1px solid var(--color-primary);
+    }
+
+    #gepetto-panel #ref_text blockquote {
     }
 
     #gepetto-panel #content {
-        /* background-color: #937; */
-        padding: 10px;
     }
 
     #gepetto-panel #claims {
-        /* background-color: #a5c; */
-        padding: 10px;
-        border: 1px solid;
-        border-radius: var(--border-radius);
+        order:3;
     }
+    
 
     #gepetto-panel #claims p {
         padding: 3px 0px;
     }
 
     #gepetto-panel #questions {
-        background-color: #d94;
         padding: 10px;
+        order:4;
     }
+    #gepetto-panel .close-btn {
+        order: 1;
+        align-self: flex-end;
+        justify-self: flex-start;
+        width: 1rem;
+        height: 1rem;
+        border: unset;
+        background-color: unset;
+        margin: 1rem;
+    }
+
+    .lds-facebook {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin: auto;
+      }
+      .lds-facebook div {
+        display: inline-block;
+        position: absolute;
+        left: 8px;
+        width: 16px;
+        background: var(--color-primary);
+        opacity: 0.5;
+        animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+      }
+      .lds-facebook div:nth-child(1) {
+        left: 8px;
+        animation-delay: -0.24s;
+      }
+      .lds-facebook div:nth-child(2) {
+        left: 32px;
+        animation-delay: -0.12s;
+      }
+      .lds-facebook div:nth-child(3) {
+        left: 56px;
+        animation-delay: 0;
+      }
+      @keyframes lds-facebook {
+        0% {
+          top: 8px;
+          height: 64px;
+        }
+        50%, 100% {
+          top: 24px;
+          height: 32px;
+        }
+      }
+
+
+      /* blockquote:before,
+      
+      blockquote:after {
+        position: absolute;
+        font-family: 'serif';
+        top: 0;
+        
+        content:"\"";
+        font-size: 200px;
+        color: rgba(0,0,0,0.1);
+         
+      }
+      
+      blockquote:after {
+        top: 3rem;
+        transform: rotateX(180);
+         
+      }
+      blockquote {
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--color-primary);
+      } */

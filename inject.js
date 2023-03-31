@@ -66,12 +66,13 @@ function createSidePanel() {
   panel.id = 'gepetto-panel';
   const closeBtn = document.createElement('button');
   closeBtn.classList.add('close-btn');
+  closeBtn.innerText = "X";
   closeBtn.onclick = _ => hidePanel();
   panel.append(closeBtn);
-  const qSection = document.createElement('div');
+  const qSection = document.createElement('ul');
   qSection.id = 'questions';
   panel.append(qSection);
-  const cSection = document.createElement('div');
+  const cSection = document.createElement('ul');
   cSection.id = 'claims';
   panel.append(cSection);
   const refText = document.createElement('div');
@@ -94,7 +95,17 @@ function hidePanel() {
 function showPanel() {
   const panel = document.getElementById('gepetto-panel');
   panel.classList.add('Active');
-  // panel.querySelector('#ref_text').innerHTML = `<p>${getSelectedText()}</p>`;
+
+  // panel.querySelector('#ref_text').innerHTML = `<blockquote>${getSelectedText()}</blockquote>`;
+  panel.querySelector('#ref_text').innerHTML = `<p class="ref-text-title">טקסט המקור</p><blockquote>${getSelectedText()}</blockquote>`;
+  // panel.querySelector('#questions').innerHTML = `<p>QUESTIONS</p>`;
+  // panel.querySelector('#claims').innerHTML = `<p>CLAIMS</p>`;
+}
+function createLoader() {
+  const loaderEl = document.createElement('div');
+  loaderEl.classList.add('lds-facebook');
+  loaderEl.innerHTML = '<div></div><div></div><div></div>';
+  return loaderEl;
 }
 
 function createPaperClip() {
@@ -113,6 +124,9 @@ function injectPaperClip() {
 
 function doGepetto() {
   const currSelectedText = getSelectedText();
+  const loader = createLoader();
+  document.querySelector('#gepetto-panel').append(loader);
+  document.querySelector('#gepetto-panel').classList.add('loading');
   document.querySelector('#gepetto-panel #claims').innerHTML = '';
   document.querySelector('#gepetto-panel #questions').innerHTML = '';
 
@@ -121,12 +135,17 @@ function doGepetto() {
     const { claims, questions } = resp.he;
     
     if (claims || questions) {
+      document.querySelector('#gepetto-panel').classList.remove('loading');
+      createElementUnder('li', `claimTitle`, '#gepetto-panel #claims');
+      document.getElementById('claimTitle').innerText = 'טענות שעולות מהטקסט';
+      createElementUnder('li', `questionTitle`, '#gepetto-panel #questions');
+      document.getElementById('questionTitle').innerText = 'שאלות שעולות מהטקסט';
       claims?.forEach((c, i) => {
-        const _claim = createElementUnder('p', `claim${i}`, '#gepetto-panel #claims');
+        const _claim = createElementUnder('li', `claim${i}`, '#gepetto-panel #claims');
         _claim.innerHTML = c;
       }); 
       questions?.forEach((q, i) => {
-        const _question = createElementUnder('p', `question${i}`, '#gepetto-panel #questions');
+        const _question = createElementUnder('li', `question${i}`, '#gepetto-panel #questions');
         _question.innerHTML = q;
       });
     } else {
