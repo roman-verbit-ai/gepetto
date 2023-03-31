@@ -1,6 +1,4 @@
-let currSelectedText;
-let gepettoPanel;
-const isAuto = true;
+
 
 class GePeTtoClient {
 
@@ -20,94 +18,134 @@ class GePeTtoClient {
     };
 
     return fetch(this.API_URL, request)
-      .then((response) => response.text(),
-            (error) => {alert('sorry. error'); console.error(error); return null; })
-      .then((data) => JSON.parse(data));
+      .then((response) => response.text())
+      .then((data) => {
+        try {
+          JSON.parse(data);
+        } catch (error) {
+          return data?.split('<body>')?.[1]?.split('</body>')?.[0];
+        }
+        
+      });
   }
 };
 
-function init() {
-  injectPaperClip();
-  injectPanel();
-
-  function getSelectedText() {
-    var text = "";
-    if (typeof window.getSelection != "undefined") {
-        text = window.getSelection().toString();
-    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
-        text = document.selection.createRange().text;
-    }
-    return text;
+function debounce (callback, wait) {
+  let timeoutId = null;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback.apply(null, args);
+    }, wait);
+  };
+}
+function listenToUserSelection(cb) {
+  const listener = debounce(_ => {
+    cb();
+  }, 500);
+  document.addEventListener('selectionchange', listener);
+  document.addEventListener('unload', () => {
+    document.removeEventListener('selectionchange', listener);
+  });
+}
+function getSelectedText() {
+  var text = "";
+  if (typeof window.getSelection != "undefined") {
+      text = window.getSelection().toString();
+  } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+      text = document.selection.createRange().text;
   }
+  return text;
+}
 
-  function paperClipClicked(e) {
-    e.preventDefault();
-    showPanel();
+function paperClipClicked(e) {
+  e.preventDefault();
+  createSidePanel();
+  doGepetto(getSelectedText());
+  showPanel();
+}
+
+function createSidePanel() {
+  if (document.getElementById('gepetto-panel')) {
+    document.removeChild('#gepetto-panel');
   }
+  const panel = document.createElement('div');
+  panel.id = 'gepetto-panel';
+  const closeBtn = document.createElement('button');
+  closeBtn.classList.add('close-btn');
+  closeBtn.onclick = _ => hidePanel();
+  panel.append(closeBtn);
+  const qSection = document.createElement('div');
+  qSection.id = 'questions';
+  panel.append(qSection);
+  const cSection = document.createElement('div');
+  cSection.id = 'claims';
+  panel.append(cSection);
+  const refText = document.createElement('div');
+  refText.id = 'ref_text';
+  panel.append(refText);
+  document.body.append(panel);
+}
+function attachToSelection(el) {
+  const selection = window.getSelection();
+  const pos = selection?.anchorNode?.parentElement?.getBoundingClientRect();
+  const xPosition = pos.left + selection.focusOffset;
+  el.style.setProperty('--pos-x', xPosition + 'px');
+  el.style.setProperty('--pos-y', pos.bottom + 'px');
 
-  function showPanel() {
-    const panel = document.getElementById('gepetto-panel');
-    panel.classList.add('Active');
-    panel.querySelector('#ref_text').innerHTML = `<p>${currSelectedText}</p>`;
-    // if (currSelectedText) {
-    //   alert("Got selected text " + currSelectedText);
-    // }
-  }
+}
+function hidePanel() {
+  const panel = document.getElementById('gepetto-panel');
+  panel.classList.remove('Active');
+}
+function showPanel() {
+  const panel = document.getElementById('gepetto-panel');
+  panel.classList.add('Active');
+  panel.querySelector('#ref_text').innerHTML = `<p>${getSelectedText()}</p>`;
+}
 
-  function doSomethingWithSelectedText() {
-    console.log("doSomethingWithSelectedText");
-      var selectedText = getSelectedText();
-      currSelectedText = selectedText;
+function createPaperClip() {
+  const paperClip = document.createElement('div');
+  paperClip.className = 'paper-clip';
+  attachToSelection(paperClip);
+  paperClip.addEventListener("mousedown", e => paperClipClicked(e));
+  return paperClip;
+}
+function injectPaperClip() {
+  const paperClip = createPaperClip();
+  document.querySelector('body').append(paperClip);
+  paperClip.classList.add('active');
+}
 
-      if (selectedText) {
-        document.querySelector('.paper-clip').classList.add('active');
 
-        if (isAuto) {
-          doGepetto(selectedText);
-        }
-      } else {
-        document.querySelector('.paper-clip').classList.remove('active');
-      }
-  }
+function doGepetto() {
+  const currSelectedText = getSelectedText();
+  document.querySelector('#gepetto-panel #claims').innerHTML = '';
+  document.querySelector('#gepetto-panel #questions').innerHTML = '';
 
-  function injectPaperClip() {
-    const paperClip = document.createElement('div');
-    paperClip.className = 'paper-clip';
-    paperClip.addEventListener("mousedown", e => paperClipClicked(e));
-    document.querySelector('body').append(paperClip);
-    document.onmouseup = doSomethingWithSelectedText;
-    document.onkeyup = doSomethingWithSelectedText;
-  }
-
-  function injectPanel() {
-    const panel = createElementUnder('div', 'gepetto-panel', 'body');
-    const ref_text = createElementUnder('div', 'ref_text', '#gepetto-panel');
-    const content = createElementUnder('div', 'content', '#gepetto-panel');
-    const loading = createElementUnder('div', 'loading', '#gepetto-panel>#content');
-    const questions = createElementUnder('div', 'questions', '#gepetto-panel>#content');
-    const claims = createElementUnder('div', 'claims', '#gepetto-panel>#content');
-  }
-
-  function doGepetto(text) {
-    document.querySelector('#gepetto-panel #claims').innerHTML = '';
-    document.querySelector('#gepetto-panel #questions').innerHTML = '';
-
-    document.querySelector('#gepetto-panel #ref_text').innerHTML = `<p>${currSelectedText}</p>`;
+  document.querySelector('#gepetto-panel #ref_text').innerHTML = `<p>${currSelectedText}</p>`;
+  new GePeTtoClient().query_gepetto(currSelectedText).then((resp) => {
     
-    new GePeTtoClient().query_gepetto(currSelectedText).then((resp) => {      
-      console.log(resp)
-      
-      resp.Claims.forEach((c, i) => {
+    if (resp.Claims || resp.Questions) {
+      resp.Claims?.forEach((c, i) => {
         const _claim = createElementUnder('p', `claim${i}`, '#gepetto-panel #claims');
         _claim.innerHTML = c;
       }); 
-
-      resp.Questions.forEach((q, i) => {
+      resp.Questions?.forEach((q, i) => {
         const _question = createElementUnder('p', `question${i}`, '#gepetto-panel #questions');
         _question.innerHTML = q;
-      }); 
-    });
-  }
+      });
+    } else {
+      if (!document.getElementById('error-message')) {
+        const _error_message = createElementUnder('p', 'error-message', '#gepetto-panel #claims');
+        _error_message.innerHTML = `<detail>Something went wrong...<summary>${resp}</summary></summary></detail>`;
+      }
+    }
+  });
+}
+function init() {
+  listenToUserSelection(injectPaperClip);
+}
 
   function createElementUnder(type, id, parentQS) {
     const el = document.createElement(type);
@@ -115,6 +153,5 @@ function init() {
     document.querySelector(parentQS).append(el);
     return el;
   }
-}
 
 init();
