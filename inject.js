@@ -63,6 +63,7 @@ function createSidePanel() {
     document.removeChild('#gepetto-panel');
   }
   const panel = document.createElement('div');
+  panel.setAttribute('dir', 'rtl');
   panel.id = 'gepetto-panel';
   const closeBtn = document.createElement('button');
   closeBtn.classList.add('close-btn');
