@@ -19,14 +19,7 @@ class GePeTtoClient {
 
     return fetch(this.API_URL, request)
       .then((response) => response.text())
-      .then((data) => {
-        try {
-          JSON.parse(data);
-        } catch (error) {
-          return data?.split('<body>')?.[1]?.split('</body>')?.[0];
-        }
-        
-      });
+      .then(JSON.parse);
   }
 };
 
@@ -101,7 +94,7 @@ function hidePanel() {
 function showPanel() {
   const panel = document.getElementById('gepetto-panel');
   panel.classList.add('Active');
-  panel.querySelector('#ref_text').innerHTML = `<p>${getSelectedText()}</p>`;
+  // panel.querySelector('#ref_text').innerHTML = `<p>${getSelectedText()}</p>`;
 }
 
 function createPaperClip() {
@@ -125,13 +118,14 @@ function doGepetto() {
 
   document.querySelector('#gepetto-panel #ref_text').innerHTML = `<p>${currSelectedText}</p>`;
   new GePeTtoClient().query_gepetto(currSelectedText).then((resp) => {
+    const { claims, questions } = resp.he;
     
-    if (resp.Claims || resp.Questions) {
-      resp.Claims?.forEach((c, i) => {
+    if (claims || questions) {
+      claims?.forEach((c, i) => {
         const _claim = createElementUnder('p', `claim${i}`, '#gepetto-panel #claims');
         _claim.innerHTML = c;
       }); 
-      resp.Questions?.forEach((q, i) => {
+      questions?.forEach((q, i) => {
         const _question = createElementUnder('p', `question${i}`, '#gepetto-panel #questions');
         _question.innerHTML = q;
       });
@@ -144,6 +138,8 @@ function doGepetto() {
   });
 }
 function init() {
+  // createSidePanel();
+  // showPanel();
   listenToUserSelection(injectPaperClip);
 }
 
