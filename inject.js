@@ -97,12 +97,12 @@ function init() {
     new GePeTtoClient().query_gepetto(currSelectedText).then((resp) => {      
       console.log(resp)
       
-      resp.Claims.forEach((c, i) => {
+      resp.claims.forEach((c, i) => {
         const _claim = createElementUnder('p', `claim${i}`, '#gepetto-panel #claims');
         _claim.innerHTML = c;
       }); 
 
-      resp.Questions.forEach((q, i) => {
+      resp.questions.forEach((q, i) => {
         const _question = createElementUnder('p', `question${i}`, '#gepetto-panel #questions');
         _question.innerHTML = q;
       }); 
