@@ -1,6 +1,6 @@
 @keyframes paper-clip-appear {
     to{
-      bottom: 20px;
+      bottom: 0px;
       opacity:1;
     }
   }
@@ -14,206 +14,28 @@
 
 
 .paper-clip {
-    width:100px;
-    background-color:red;
-    height:100px;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    background-color: aquamarine;
     bottom: -100%;
     position:fixed;
     opacity:0;
 }
 
+.paper-clip>img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-top: 10px;
+}
+
 .paper-clip.active {
-    background-color: blue!important;
     animation: paper-clip-appear 1s ease forwards;
 }
-
-.criticizeButton:hover {
-    cursor: pointer;
-}
-
-.loading-container{
-    height: 400px;
-    width: 400px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    border-radius: 10px;
-}
-
-.loading-container .row{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-}
-    
-.loading-container .circle{
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    background-color: #9312e2;
-    border-radius: 50%;
-    box-shadow: 10px 0px 5px -1px rgba(0,0,0,0.75);
-}
-
-.loading-container .circle1{
-    animation-name: loading;
-    animation-duration: 1s;
-    animation-direction: alternate;
-    animation-iteration-count: infinite;
-    transform: translate(0);
-    animation-timing-function: ease-in-out;
-}
-
-@keyframes loading {
-    0%{
-        transform: translate(0,-30px);
-    }
-    50%{
-        transform: translate(0);
-    }
-    100%{
-        transform: translate(0,30px);
-    }
-}
-
-.loading-container .circle2{
-    animation-name: loading2;
-    animation-duration: 1s;
-    animation-direction: alternate;
-    animation-iteration-count: infinite;
-    transform: translate(0);
-    animation-timing-function: ease-in-out;
-    animation-delay: 1s;
-}
-
-@keyframes loading2 {
-    0%{
-        transform: translate(0,-30px);
-    }
-    50%{
-        transform: translate(0);
-    }
-    100%{
-        transform: translate(0,30px);
-    }
-}
-
-.loading-container .circle3{
-    animation-name: loading3;
-    animation-duration: 1s;
-    animation-direction: alternate;
-    animation-iteration-count: infinite;
-    transform: translate(0);
-    animation-timing-function: ease-in-out;
-}
-
-@keyframes loading3 {
-    0%{
-        transform: translate(0,-30px);
-    }
-    50%{
-        transform: translate(0);
-    }
-    100%{
-        transform: translate(0,30px);
-    }
-}
-
-    /* The Modal (background) */
-    #gptModal {
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
-      background-color: rgba(91, 112, 131, 0.4);
-
-    }
-    
-    /* Modal Content/Box */
-    #gptModal .modal-content {
-      direction: rtl;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 470px;
-      padding: 15px;
-
-      background: #000000;
-      border-radius: 20px;
-      min-height:400px;
-    }
-    
-    #gptModal .loadingText {
-      position: absolute;
-      bottom: 17px;
-      color: white;
-      font-size: 20px;
-      text-align: center;
-      width: 100%;
-    }
-
-    /* The Close Button */
-    #gptModal .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    
-    #gptModal .close:hover,
-    #gptModal .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    } 
-
-    #gptModal .accordion {
-      font-family: 'Inter';
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 140%;
-      text-align: right;
-      color: #FFFFFF;
-      background: #17181C;
-      border-radius: 20px;
-      color: #FFFFFF;
-      cursor: pointer;
-      padding: 20px 25px;
-      width: 100%;
-      border: none;
-      outline: none;
-      transition: 0.4s;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    
-    #gptModal .panel {
-      padding: 0 18px;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.2s ease-out;
-    }
-
-    #gptModal .question {
-        border-radius: 20px;
-        padding: 15px;
-        cursor: pointer;
-        color: white;
-    }
-
-    #gptModal .panel .question:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    #gepetto-panel {
+  
+    /* #gepetto-panel {
         position:fixed;
         top: 0px;
         right: 0;
@@ -221,33 +43,32 @@
         height: 100%;
         background-color: #9312e2;
         opacity: 0;   
-        z-index: 1000000000001; /* TODO ! */
-    }
+        
+    } */
+
+    
 
     #gepetto-panel.Active {
         animation: panel-appear 1s ease forwards;
     }
 
-    #gepetto-panel #ref_text {
-        background-color: #739;
-        padding: 10px;
+    #gepetto-panel {
+        z-index: 10000001; /* TODO ! */
+        position: fixed;
+        top: 0;
+        right: -33vw;
+        width: 33vw;
+        height: 100vh;
+        background-color: var(--color-bg);
+        opacity: 0;
+        transition: all, .2s, ease-in;
+        border-top-left-radius: var(--border-radius);
+        border-bottom-left-radius: var(--border-radius);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        border-inline-end: 1px solid var(--color-primary);
     }
 
-    #gepetto-panel #content {
-        background-color: #937;
-        padding: 10px;
-    }
-
-    #gepetto-panel #claims {
-        background-color: #a5c;
-        padding: 10px;
-    }
-
-    #gepetto-panel #claims p {
-        padding: 3px 0px;
-    }
-
-    #gepetto-panel #questions {
-        background-color: #d94;
-        padding: 10px;
-    }
+    
