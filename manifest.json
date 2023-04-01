@@ -11,8 +11,6 @@
         "default_title": "Gepetto"
     },
     "permissions": [
-        "storage",
-        "unlimitedStorage",
         "webRequest"
     ],
     "manifest_version": 3,
