@@ -29,8 +29,7 @@ class GePeTtoClient {
 };
 
 function init() {
-  injectPaperClip();
-  injectPanel();
+  injectGepetto();
 
   function getSelectedText() {
     var text = "";
@@ -44,18 +43,20 @@ function init() {
 
   function paperClipClicked(e) {
     e.preventDefault();
-    document.querySelector('.paper-clip').classList.remove('active');
-    document.querySelector('#gepetto-panel #error-message')?.remove();
-    showPanel();
-    doGepetto();
+
+    if (document.querySelector('#gepetto').classList.contains('panel')) {
+      // close
+      clearPanel();
+      hidePanel();
+    } else {
+      // close
+      showPanel();
+      doGepetto();
+    }
   }
 
   function showPanel() {
-    document.getElementById('gepetto-panel').classList.add('Active');
-    // panel.querySelector('#ref_text').innerHTML = `<blockquote>${currSelectedText}</blockquote>`;
-    // if (currSelectedText) {
-    //   alert("Got selected text " + currSelectedText);
-    // }
+    document.getElementById('gepetto').classList.add('panel');
   }
 
   function doSomethingWithSelectedText() {
@@ -63,101 +64,155 @@ function init() {
     currSelectedText = selectedText;
 
     if (selectedText) {
-      document.querySelector('.paper-clip').classList.add('active');
+      document.getElementById('gepetto').classList.add('button');
     } else {
-      document.querySelector('.paper-clip').classList.remove('active');
+      document.getElementById('gepetto').classList.remove('button');
     }
   }
 
-  function injectPaperClip() {
+  function createPaperClip() {
     const paperClip = document.createElement('div');
     paperClip.className = 'paper-clip';
     const paperClipImage = document.createElement('img');
     paperClipImage.src = chrome.runtime.getURL("icon.png");
-    paperClip.appendChild(paperClipImage);
+    const midDiv = document.createElement('div');
+    midDiv.appendChild(paperClipImage);
+    paperClip.appendChild(midDiv);
     paperClip.addEventListener("mousedown", e => paperClipClicked(e));
-    document.querySelector('body').append(paperClip);
+    return paperClip;
+  }
+
+  function createPanelBase() {
+    const iframe = document.createElement('iframe');
+    iframe.id = 'gepetto-panel';
+    return iframe;
+  }
+
+  function createPanelContents() {
+    let gepetto_frame = document.getElementById('gepetto-panel').contentDocument;
+    
+    const cssLink = gepetto_frame.createElement('link');
+    cssLink.rel = 'stylesheet';
+    cssLink.type = 'text/css';
+    cssLink.href = chrome.runtime.getURL('inject.panel.css');
+
+    gepetto_frame.head.appendChild(cssLink);
+    gepetto_frame.body.setAttribute('dir', 'rtl');
+
+    var fontLink = gepetto_frame.createElement('link');
+    fontLink.setAttribute('rel', 'stylesheet');
+    fontLink.setAttribute('type', 'text/css');
+    fontLink.setAttribute('href', 'https://fonts.googleapis.com/css?family=Girassol');
+    gepetto_frame.head.appendChild(fontLink);
+
+    const fontLink2 = gepetto_frame.createElement('link');
+    fontLink2.setAttribute('rel', 'stylesheet');
+    fontLink2.setAttribute('type', 'text/css');
+    fontLink2.setAttribute('href', 'https://fonts.googleapis.com/css?family=Heebo');
+    gepetto_frame.head.appendChild(fontLink2);
+
+    // const closeBtn = createElementUnderElement('button', 'closeBtn', gepetto_frame, 'body');
+    // closeBtn.innerText = "X";
+    // closeBtn.onclick = _ => hidePanel();
+
+    const ref_text = createElementUnderElement('div', 'ref_text', gepetto_frame, 'body');
+    
+    const claims = createElementUnderElement('div', 'claims', gepetto_frame, 'body');
+    const loading = createLoader(gepetto_frame);
+    
+    const questions = createElementUnderElement('div', 'questions', gepetto_frame, 'body');
+    return gepetto_frame;
+  }
+
+  function injectGepetto() {
+    const gepettoDiv = document.createElement('div'); 
+    gepettoDiv.id = 'gepetto';
+
+    const paperClip = createPaperClip();
+    gepetto_frame = createPanelBase();
+
+    gepettoDiv.append(paperClip);
+    gepettoDiv.append(gepetto_frame);
+
+    document.body.append(gepettoDiv);
+
+    createPanelContents();
+    
     document.onmouseup = doSomethingWithSelectedText;
     document.onkeyup = doSomethingWithSelectedText;
   }
 
-  function createPanel() {
-    gepetto_frame = document.createElement('iframe');
-    gepetto_frame.id = 'gepetto-panel';
-    
-    document.body.appendChild(gepetto_frame); // must be here for the iframe to have document element
-
-    const link = gepetto_frame.contentWindow.document.createElement('link');
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = chrome.runtime.getURL('inject.panel.css');
-    gepetto_frame.contentWindow.document.head.appendChild(link);
-    gepetto_frame.contentWindow.document.body.setAttribute('dir', 'rtl');
-  }
-
-  function injectPanel() {
-    createPanel();   
-    
-    const closeBtn = createElementUnderElement('button', 'closeBtn', gepetto_frame, 'body');
-    closeBtn.innerText = "X";
-    closeBtn.onclick = _ => hidePanel();
-
-    const ref_text = createElementUnderElement('div', 'ref_text', gepetto_frame, 'body');
-    
-    const loading = createLoader();
-    const claims = createElementUnderElement('ul', 'claims', gepetto_frame, 'body');
-    const questions = createElementUnderElement('ul', 'questions', gepetto_frame, 'body');
-  }
-
-  function createLoader() {
-    const loader = createElementUnderElement('div', 'loader', gepetto_frame, 'body');
+  function createLoader(frame) {
+    const loader = createElementUnderElement('div', 'loader', frame, 'body');
     loader.innerHTML = '<div></div>'.repeat(3);
   }
 
   function hidePanel() {
-    const panel = document.getElementById('gepetto-panel');
-    panel.classList.remove('Active');
+    const gepetto = document.getElementById('gepetto');
+    gepetto.classList.remove('panel');
+  }
+
+  function createRefText(text) {
+    const frm = gepetto_frame.contentDocument;
+    const q = frm.createElement('blockquote');
+    const img1 = frm.createElement('img');
+    img1.src = chrome.runtime.getURL("dq.png");
+    const t = frm.createElement('span');
+    t.innerHTML = text.split(' ').slice(0, -1).join(' ') + ' ';
+    const lastWordDiv = frm.createElement('div');
+    const lastWord = frm.createElement('span');
+    lastWord.innerHTML = text.split(' ').at(-1);
+    const img2 = frm.createElement('img');
+    img2.src = chrome.runtime.getURL("dq.png");
+    lastWordDiv.append(lastWord, img2);
+    q.appendChild(img1);
+    q.appendChild(t);
+    q.appendChild(lastWordDiv);
+
+    return q;
+  }
+
+  function clearPanel() {
+    const frm = gepetto_frame.contentDocument;
+    frm.body.querySelector('#claims').innerHTML = '';
+    frm.body.querySelector('#questions').innerHTML = '';
+    frm.body.querySelector('#ref_text').innerHTML = '';
+    frm.body.querySelector('#error-message')?.remove();
   }
 
   function doGepetto() {
+    clearPanel();
     const currSelectedText = getSelectedText();
-    
-    gepetto_frame.contentDocument.querySelector('body').classList.add('loading');
-    gepetto_frame.contentDocument.querySelector('body #claims').innerHTML = '';
-    gepetto_frame.contentDocument.querySelector('body #questions').innerHTML = '';
+    frm = gepetto_frame.contentDocument;
+    frm.body.classList.add('loading');
 
-    gepetto_frame.contentDocument.querySelector('#ref_text').innerHTML = 
-      `<blockquote>
-          <span class="q">”</span>
-          <span>${currSelectedText}</span>
-          <span class="q">“</span>
-        </blockquote>`;
+    frm.querySelector('#ref_text').append(createRefText(currSelectedText));
     
     new GePeTtoClient().query_gepetto(currSelectedText).then(
       (resp) => {
         const { claims, questions } = resp.he;
-        
-        createElementUnderElement('div', `claimTitle`, gepetto_frame, '#claims', 'טענות שעולות מהטקסט');
-        const cUL = createElementUnderElement('ul', 'claimsUL', gepetto_frame, '#claims');
-        createElementUnderElement('div', `questionTitle`, gepetto_frame, '#questions', 'שאלות שעולות מהטקסט');
-        const qUL = createElementUnderElement('ul', 'questionsUL', gepetto_frame, '#questions');
+
+        createElementUnderElement('div', `claimTitle`, frm, '#claims', 'טענות שעולות מהטקסט');
+        const cUL = createElementUnderElement('ul', 'claimsUL', frm, '#claims');
+        createElementUnderElement('div', `questionsTitle`, frm, '#questions', 'שאלות שעולות מהטקסט');
+        const qUL = createElementUnderElement('ul', 'questionsUL', frm, '#questions');
         
         claims?.forEach((c, i) => {
-          createElementUnderElement('li', `claim${i}`, gepetto_frame, '#claims ul', c);
+          createElementUnderElement('li', `claim${i}`, frm, '#claims ul', c);
         }); 
         questions?.forEach((q, i) => {
-          createElementUnderElement('li', `question${i}`, gepetto_frame, '#questions', q);
+          createElementUnderElement('li', `question${i}`, frm, '#questions ul', q);
         });
       },
       injectError
     ).finally(() => 
-      { gepetto_frame.contentDocument.querySelector('body').classList.remove('loading'); }
+      { frm.body.classList.remove('loading'); }
     );
   }
   
 
   function injectError(error) {
-    createElementUnderElement('p', 'error-message', gepetto_frame, 'body', `<detail>Something went wrong...<summary>${error.message}${error.isFatal ? '!' : ''}</summary></summary></detail>`);
+    createElementUnderElement('p', 'error-message', gepetto_frame.contentDocument, 'body', `<detail>Something went wrong...<summary>${error.message}${error.isFatal ? '!' : ''}</summary></summary></detail>`);
   }
 
   function createElementUnder(type, id, parentQS, innerHTML) {
@@ -169,10 +224,10 @@ function init() {
   }
 
   function createElementUnderElement(type, id, parentElement, parentQS, innerHTML) {
-    const el = document.createElement(type);
+    const el = parentElement.createElement(type);
     el.id = id;
     el.innerHTML = innerHTML != undefined ? innerHTML : '';
-    parentElement.contentDocument.querySelector(parentQS).append(el);
+    parentElement.querySelector(parentQS).append(el);
     return el;
   }
 }

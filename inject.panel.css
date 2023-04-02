@@ -10,6 +10,10 @@ body {
     background-color: var(--color-bg);
     border-top-left-radius: var(--border-radius);
     border-bottom-left-radius: var(--border-radius);
+    font-family: Heebo;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -28,42 +32,48 @@ body {
 #ref_text {
     margin-inline: 0rem;
     margin: 0.5rem;
-    border-bottom: 1px solid black;
 }
 
 #ref_text > blockquote {
     padding: 0.5rem 1rem;
     margin: 0.5rem 0rem;
+    line-height: 35px;
+    text-align: right;
+    color: #0A0A0A;
 }
 
-#ref_text > blockquote > span.q {
-    vertical-align: bottom;
-    font-family: Georgia, serif;
-    font-size: 3em;
-    line-height: 0;
+#ref_text > blockquote > img {
+    margin-inline-end: 10px;
+}
+
+#ref_text > blockquote > div > img {
+    transform: rotate(-180deg);
+    margin-inline-start: 10px;
+}
+
+#ref_text > blockquote > div {
+    display: inline-block;
 }
 
 ul {
-    margin-inline: 0rem;
     padding: 0px;
-    margin: 0.5rem;
-    width: 100%;
+    margin: 0rem 2.5rem;
 }
 
  ul > li {
-    list-style-type: circle;
+    list-style-type: disc;
     margin-right: 10px;;
-    list-style-position: inside;
+    list-style-position: outside;
 }
 
-.loading ul { visibility: hidden; }
+.loading #claims, .loading #questions { visibility: hidden; }
 
 #loader {
     display: none;
 }
 
 .loading #loader {
-    display: inline-block;
+    display: block;
 }
 
 /* #gepetto-panel #ref_text blockquote:before {
@@ -88,8 +98,11 @@ ul {
     width: 4px;
 } */
 
- #claims {
-    border-bottom: 1px solid black;
+#claims #claimTitle, #questions #questionsTitle {
+    background-color: #0c0c0c;
+    color: #fffefe;
+    padding-inline-start: 1.5rem;
+    margin: 1.5rem 0rem;
 }
 
  #claims p {

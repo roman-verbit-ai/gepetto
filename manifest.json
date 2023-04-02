@@ -36,7 +36,7 @@
     },
     "web_accessible_resources": [{
         "matches": [ "<all_urls>" ],
-        "resources": ["inject.panel.css", "icon.png"]
+        "resources": ["inject.panel.css", "icon.png", "dq.png"]
     }],
 	
     "version": "0.0.3"
