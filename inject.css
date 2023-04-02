@@ -32,11 +32,11 @@
   transition: all 0.3s ease;
 }
 
-#gepetto.button {
+#gepetto.button-on {
   right: -33vw;
 }
 
-#gepetto.panel.button {
+#gepetto.panel.button-on {
   right:0px;
 }
 

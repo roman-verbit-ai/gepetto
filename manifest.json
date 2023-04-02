@@ -1,12 +1,13 @@
 {
     "update_url": "https://clients2.google.com/service/update2/crx",
     "name": "Gepetto",
-    "description": "TODO",
+    "description": "extract the claims in the text and find out what would be some good questions to ask about it",
     "browser_action": {
         "default_icon": {
-            "16": "/icons/icon16.png",
+            
             "48": "/icons/icon48.png",
-            "96": "/icons/icon96.png"
+            "96": "/icons/icon96.png",
+            "128": "/icons/icon128.png"
         },
         "default_title": "Gepetto"
     },
@@ -27,9 +28,9 @@
     ],
     
     "icons": {
-        "16": "/icons/icon16.png",
         "48": "/icons/icon48.png",
-        "96": "/icons/icon96.png"
+        "96": "/icons/icon96.png",
+        "128": "/icons/icon128.png"
     },
     "content_security_policy" : {
         "extension_pages" : "script-src 'self';"
@@ -38,6 +39,5 @@
         "matches": [ "<all_urls>" ],
         "resources": ["inject.panel.css", "icon.png", "dq.png"]
     }],
-	
-    "version": "0.0.3"
+    "version": "0.0.4"
 }

@@ -64,9 +64,9 @@ function init() {
     currSelectedText = selectedText;
 
     if (selectedText) {
-      document.getElementById('gepetto').classList.add('button');
+      document.getElementById('gepetto').classList.add('button-on');
     } else {
-      document.getElementById('gepetto').classList.remove('button');
+      document.getElementById('gepetto').classList.remove('button-on');
     }
   }
 
