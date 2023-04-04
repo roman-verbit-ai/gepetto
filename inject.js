@@ -158,10 +158,10 @@ function init() {
     const img1 = frm.createElement('img');
     img1.src = chrome.runtime.getURL("dq.png");
     const t = frm.createElement('span');
-    t.innerHTML = text.split(' ').slice(0, -1).join(' ') + ' ';
+    t.textContent = text.split(' ').slice(0, -1).join(' ') + ' ';
     const lastWordDiv = frm.createElement('div');
     const lastWord = frm.createElement('span');
-    lastWord.innerHTML = text.split(' ').at(-1);
+    lastWord.textContent = text.split(' ').at(-1);
     const img2 = frm.createElement('img');
     img2.src = chrome.runtime.getURL("dq.png");
     lastWordDiv.append(lastWord, img2);
@@ -215,18 +215,18 @@ function init() {
     createElementUnderElement('p', 'error-message', gepetto_frame.contentDocument, 'body', `<detail>Something went wrong...<summary>${error.message}${error.isFatal ? '!' : ''}</summary></summary></detail>`);
   }
 
-  function createElementUnder(type, id, parentQS, innerHTML) {
+  function createElementUnder(type, id, parentQS, textContent) {
     const el = document.createElement(type);
     el.id = id;
-    el.innerHTML = innerHTML;
+    el.textContent = textContent;
     document.querySelector(parentQS).append(el);
     return el;
   }
 
-  function createElementUnderElement(type, id, parentElement, parentQS, innerHTML) {
+  function createElementUnderElement(type, id, parentElement, parentQS, textContent) {
     const el = parentElement.createElement(type);
     el.id = id;
-    el.innerHTML = innerHTML != undefined ? innerHTML : '';
+    el.textContent = textContent != undefined ? textContent : '';
     parentElement.querySelector(parentQS).append(el);
     return el;
   }
