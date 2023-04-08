@@ -1,20 +1,20 @@
 @keyframes gepetto-hidden {
   to{
-    right: calc(var(--width) * -1);
+    inset-inline-start: calc(var(--width) * -1);
     opacity:1;
   }
 }
 
 @keyframes paper-clip-only {
     to{
-      right: -33vw;
+      inset-inline-start: -33vw;
       opacity:1;
     }
   }
 
   @keyframes paper-clip-panel {
     to{
-      right: 0;
+      inset-inline-start: 0;
       opacity: 1;
     }
   }
@@ -28,23 +28,24 @@
   width: var(--width);
   height: 100vh;
   position: fixed;
-  right: calc(var(--width) * -1);
+  inset-inline-start: calc(var(--width) * -1);
   transition: all 0.3s ease;
 }
 
 #gepetto.button-on {
-  right: -33vw;
+  inset-inline-start: -33vw;
 }
 
 #gepetto.panel.button-on {
-  right:0px;
+  inset-inline-start:0px;
 }
 
 .paper-clip {
     display: inline-block;
     width: 50px;
     height: 60px;
-    border-radius: 15px 0px 0px 15px;
+    border-end-end-radius: 15px;
+    border-start-end-radius: 15px;
     box-sizing: border-box;
     position: relative;
     background: #EDEAEA;
@@ -65,6 +66,7 @@
 }
 
 .paper-clip img {
+  filter: unset!important;
   object-fit: contain;
   width: 30px
 }

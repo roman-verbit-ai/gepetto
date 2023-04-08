@@ -38,7 +38,6 @@ body {
     padding: 0.5rem 1rem;
     margin: 0.5rem 0rem;
     line-height: 35px;
-    text-align: right;
     color: #0A0A0A;
 }
 
@@ -49,6 +48,16 @@ body {
 #ref_text > blockquote > div > img {
     transform: rotate(-180deg);
     margin-inline-start: 10px;
+}
+
+[dir="ltr"] #ref_text > blockquote > img {
+    transform: scaleX(-1);
+    margin-inline-end: 10px;
+}
+
+[dir="ltr"] #ref_text > blockquote > div > img {
+    transform: rotate(-180deg) scaleX(-1);
+    -webkit-transform: rotate(-180deg) scaleX(-1);
 }
 
 #ref_text > blockquote > div {
@@ -62,7 +71,7 @@ ul {
 
  ul > li {
     list-style-type: disc;
-    margin-right: 10px;;
+    margin-right: 10px;
     list-style-position: outside;
 }
 

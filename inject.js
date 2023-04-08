@@ -1,5 +1,6 @@
 // TODO : use getComputedStyle for text and setting direction  
 let currSelectedText;
+let currSelectedTextDir;
 let isAuto = true;
 let gepetto_frame;
 
@@ -12,12 +13,12 @@ class GePeTtoClient {
     /*  Authorization: "Bearer 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",*/
   };
 
-  async query_gepetto(input_text) {
+  async query_gepetto(input_text, lang) {
 
     const request = {
       method: "POST",
       headers: this.api_headers,
-      body: JSON.stringify({text : input_text})
+      body: JSON.stringify({text : input_text, lang})
     };
 
     let response = await fetch(this.API_URL, request);
@@ -62,8 +63,10 @@ function init() {
   function doSomethingWithSelectedText() {
     var selectedText = getSelectedText();
     currSelectedText = selectedText;
+    currSelectedTextDir = getComputedStyle(window.getSelection().focusNode.parentElement).direction;
 
     if (selectedText) {
+      document.getElementById('gepetto').style.direction = currSelectedTextDir;
       document.getElementById('gepetto').classList.add('button-on');
     } else {
       document.getElementById('gepetto').classList.remove('button-on');
@@ -88,7 +91,7 @@ function init() {
     return iframe;
   }
 
-  function createPanelContents() {
+  function createPanelContents(/*direction*/) {
     let gepetto_frame = document.getElementById('gepetto-panel').contentDocument;
     
     const cssLink = gepetto_frame.createElement('link');
@@ -97,7 +100,7 @@ function init() {
     cssLink.href = chrome.runtime.getURL('inject.panel.css');
 
     gepetto_frame.head.appendChild(cssLink);
-    gepetto_frame.body.setAttribute('dir', 'rtl');
+    // gepetto_frame.body.setAttribute('dir', direction);
 
     var fontLink = gepetto_frame.createElement('link');
     fontLink.setAttribute('rel', 'stylesheet');
@@ -131,9 +134,9 @@ function init() {
     const paperClip = createPaperClip();
     gepetto_frame = createPanelBase();
 
-    gepettoDiv.append(paperClip);
     gepettoDiv.append(gepetto_frame);
-
+    gepettoDiv.append(paperClip);
+    
     document.body.append(gepettoDiv);
 
     createPanelContents();
@@ -180,21 +183,28 @@ function init() {
     frm.body.querySelector('#error-message')?.remove();
   }
 
+  function isHebrewText() {
+    return currSelectedTextDir == 'rtl' && currSelectedText.match(/[א-ת]/g).length > currSelectedText.length / 2;
+  }
+
   function doGepetto() {
+    console.log(`doGepetto`);
+    console.log(`doGepetto : ${currSelectedTextDir}`);
     clearPanel();
     const currSelectedText = getSelectedText();
     frm = gepetto_frame.contentDocument;
     frm.body.classList.add('loading');
-
+    frm.body.setAttribute('dir', currSelectedTextDir);
     frm.querySelector('#ref_text').append(createRefText(currSelectedText));
     
-    new GePeTtoClient().query_gepetto(currSelectedText).then(
+    new GePeTtoClient().query_gepetto(currSelectedText, isHebrewText() ? 'he' : 'en').then(
       (resp) => {
-        const { claims, questions } = resp.he;
+        console.log(resp);
+        const { claims, questions } = resp;
 
-        createElementUnderElement('div', `claimTitle`, frm, '#claims', 'טענות שעולות מהטקסט');
+        createElementUnderElement('div', `claimTitle`, frm, '#claims', currSelectedTextDir == 'ltr' ? 'claims found in the text' : 'טענות שעולות מהטקסט');
         const cUL = createElementUnderElement('ul', 'claimsUL', frm, '#claims');
-        createElementUnderElement('div', `questionsTitle`, frm, '#questions', 'שאלות שעולות מהטקסט');
+        createElementUnderElement('div', `questionsTitle`, frm, '#questions', currSelectedTextDir == 'ltr' ? 'questions which may be raised' : 'שאלות שעולות מהטקסט');
         const qUL = createElementUnderElement('ul', 'questionsUL', frm, '#questions');
         
         claims?.forEach((c, i) => {
@@ -209,7 +219,6 @@ function init() {
       { frm.body.classList.remove('loading'); }
     );
   }
-  
 
   function injectError(error) {
     createElementUnderElement('p', 'error-message', gepetto_frame.contentDocument, 'body', `<detail>Something went wrong...<summary>${error.message}${error.isFatal ? '!' : ''}</summary></summary></detail>`);
